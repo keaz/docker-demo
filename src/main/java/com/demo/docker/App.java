@@ -53,7 +53,8 @@ public class App {
     private List<String> readToFile(){
         try(BufferedReader fileReader = new BufferedReader(new FileReader(file))) {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            return bufferedReader.lines().collect(Collectors.toList());
+            return bufferedReader.lines().map(s -> s.substring(5)).sorted().parallel().collect(Collectors.toList());
+
         }catch (IOException e){
             System.out.println(e);
         }

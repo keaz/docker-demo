@@ -1,7 +1,17 @@
-FROM adoptopenjdk/openjdk11:jre-11.0.9_11.1-alpine as builder
+FROM adoptopenjdk/maven-openjdk11:latest as build
 
-COPY target/DockerDemo-1.0-SNAPSHOT.jar .
+WORKDIR /build
+
+COPY src src
+COPY pom.xml .
+
+RUN mvn clean install -DskipTests
+
+FROM adoptopenjdk/openjdk11:jre-11.0.9_11.1-alpine
+
+WORKDIR /app
+COPY --from=build /build/target/DockerDemo-1.0-SNAPSHOT.jar .
+
 VOLUME /date
-RUN ls -al
-ENTRYPOINT java -jar DockerDemo-1.0-SNAPSHOT.jar
 
+ENTRYPOINT java -jar DockerDemo-1.0-SNAPSHOT.jar
